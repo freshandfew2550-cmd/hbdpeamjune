@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday PeamPeam!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;600&family=Sunshiney&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-brown: #563526;
+            --soft-cream: #F0EAD8;
+            --blue-grey: #AEC7E0;
+            --olive-green: #98AD57;
+            --pink-accent: #EA8AB5;
+            --dark-pink: #9E1B4B;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--soft-cream);
+            background-image: radial-gradient(var(--pink-accent) 1.5px, transparent 1.5px);
+            background-size: 25px 25px;
+            color: var(--primary-brown);
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .en-font {
+            font-family: 'Sunshiney', cursive;
+            font-weight: normal;
+        }
+
+        .container {
+            background-color: #fff;
+            border: 8px solid white;
+            outline: 4px solid var(--olive-green);
+            border-radius: 20px;
+            padding: 40px 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(86, 53, 38, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 15px;
+            background-image: radial-gradient(circle at 10px 15px, transparent 10px, white 10px);
+            background-size: 20px 20px;
+            transform: translateY(-10px);
+        }
+
+        .page { display: none; }
+        .active { display: block; }
+
+        h1 { 
+            color: var(--dark-pink); 
+            font-size: 24px;
+            border-bottom: 2px dashed var(--blue-grey);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        
+        button {
+            background-color: var(--olive-green);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-family: 'Prompt', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 0 var(--primary-brown);
+        }
+        button:hover {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--primary-brown);
+            background-color: var(--primary-brown);
+        }
+
+        input {
+            padding: 12px;
+            font-family: 'Prompt', sans-serif;
+            border: 2px solid var(--blue-grey);
+            border-radius: 12px;
+            font-size: 16px;
+            width: 85%;
+            text-align: center;
+            background-color: #fafafa;
+            color: var(--primary-brown);
+        }
+
+        .hint { font-size: 14px; color: var(--olive-green); margin-top: 10px; }
+
+        #chat-box {
+            text-align: left;
+            margin: 20px 0;
+            min-height: 200px;
+        }
+        .bubble {
+            background-color: var(--blue-grey);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 20px 20px 20px 5px;
+            margin-bottom: 12px;
+            display: inline-block;
+            max-width: 85%;
+            font-size: 16px;
+            /* ข้อความแชทใช้ฟอนต์ Prompt ทั้งหมดตามสั่งนะฮ่ะ */
+            font-family: 'Prompt', sans-serif; 
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .polaroid {
+            background: white;
+            padding: 8px 8px 18px 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+            width: 110px;
+            transform: rotate(-2deg);
+        }
+        .polaroid img {
+            width: 100%;
+            height: 110px;
+            object-fit: cover;
+            filter: blur(8px);
+            transition: filter 0.3s ease;
+            cursor: pointer;
+        }
+
+        #final-text {
+            color: var(--dark-pink);
+            font-size: 45px;
+            font-weight: bold;
+            text-shadow: 3px 3px 0px var(--soft-cream);
+            animation: shake 0.5s infinite;
+        }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            50% { transform: translate(-2px, 0px) rotate(1deg); }
+            100% { transform: translate(1px, -1px) rotate(0deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="page1" class="page active">
+            <h1 class="en-font">🌸 May 13th, What day is today? 🌸</h1>
+            <input type="text" id="password" placeholder="Enter password here...">
+            <p class="hint en-font">Hint: your mom and our gang name (English)</p>
+            <p id="error-msg" style="color: var(--dark-pink); display: none; font-size: 14px; margin-top: 10px;">Incorrect! Try again please!</p>
+            <button class="en-font" onclick="checkPassword()">Continue</button>
+        </div>
+
+        <div id="page2" class="page">
+            <h1 class="en-font">You have a message!</h1>
+            <div id="chat-box"></div>
+            <button id="btn-next2" style="display:none;" onclick="nextPage(3)">👉 กดไปต่อกุมีลูกเล่นอีก</button>
+        </div>
+
+        <div id="page3" class="page">
+            <h1 class="en-font">Memory Gallery</h1>
+            <p style="font-size: 14px; color: var(--pink-accent);">(กดค้างที่รูปเพื่อให้รูปชัดขึ้นนะฮ่ะ!)</p>
+            <div class="gallery">
+                <div class="polaroid"><img src="pic1.jpeg" alt="Photo" class="blur-img"></div>
+                <div class="polaroid"><img src="pic2.jpeg" alt="Photo" class="blur-img"></div>
+                <div class="polaroid"><img src="pic3.jpeg" alt="Photo" class="blur-img"></div>
+                <div class="polaroid"><img src="pic4.jpeg" alt="Photo" class="blur-img"></div>
+            </div>
+            <button onclick="nextPage(4)">ไปหน้าสุดท้าย 💖</button>
+        </div>
+
+        <div id="page4" class="page">
+            <h1>🎉 สุดท้ายสิ่งที่อยากจะบอกมึงคือ...</h1>
+            <button id="final-btn" onclick="showEnding()">?? กดดูเลย ??</button>
+            <div id="final-text" style="display:none; margin-top: 20px;">อีแก่!!! </div>
+        </div>
+    </div>
+
+    <script>
+        function checkPassword() {
+            let pass = document.getElementById("password").value.toLowerCase().replace(/\s/g, '');
+            let correctPassword = "junechemjad"; 
+            if (pass === correctPassword ) { 
+                nextPage(2);
+                startChat();
+            } else {
+                document.getElementById("error-msg").style.display = "block";
+            }
+        }
+
+        function nextPage(pageNum) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById('page' + pageNum).classList.add('active');
+        }
+
+        // ข้อความแชทจะถูกแสดงผลด้วยฟอนต์ Prompt นะฮ่ะ
+        const messages = [
+            "happy birthday na i peampeam june june 🎂",
+            "ขอให้มึงมีความสุขกับอายุ 19 มาก ๆ ",
+            "ปีหน้าเราก็ได้เข้าร้านเหล้าแบบบัตรจริงละมึง 🍻",
+            "ขอให้ได้กินอาหารญี่ปุ่นเยอะๆจร้า ",
+            "ขอโทษที่ไม่ได้ลุย เด๋วไว้ลุยกัน",
+            "แต่ always support kaaa <3"
+        ];
+
+        function startChat() {
+            let chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML = "";
+            let i = 0;
+            function typeWriter() {
+                if (i < messages.length) {
+                    let bubble = document.createElement("div");
+                    bubble.className = "bubble";
+                    bubble.innerHTML = messages[i];
+                    chatBox.appendChild(bubble);
+                    chatBox.appendChild(document.createElement("br"));
+                    i++;
+                    setTimeout(typeWriter, 1200);
+                } else {
+                    document.getElementById("btn-next2").style.display = "inline-block";
+                }
+            }
+            setTimeout(typeWriter, 500);
+        }
+
+        document.querySelectorAll('.blur-img').forEach(img => {
+            img.addEventListener('mousedown', () => img.style.filter = 'blur(0px)');
+            img.addEventListener('touchstart', (e) => { img.style.filter = 'blur(0px)'; });
+            img.addEventListener('mouseup', () => img.style.filter = 'blur(8px)');
+            img.addEventListener('mouseleave', () => img.style.filter = 'blur(8px)');
+            img.addEventListener('touchend', () => img.style.filter = 'blur(8px)');
+        });
+
+        function showEnding() {
+            document.getElementById("final-btn").style.display = "none";
+            document.getElementById("final-text").style.display = "block";
+            var duration = 3 * 1000;
+            var end = Date.now() + duration;
+            (function frame() {
+                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#563526', '#98AD57', '#EA8AB5'] });
+                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#563526', '#98AD57', '#EA8AB5'] });
+                if (Date.now() < end) { requestAnimationFrame(frame); }
+            }());
+        }
+    </script>
+</body>
+</html>
